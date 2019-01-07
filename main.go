@@ -1,5 +1,7 @@
 package main
 
+//$ gomobile build -target=ios -bundleid=smokeOrFire golang.org/x/mobile/example/basic
+
 import (
 	"github.com/gophercises/deck"	
 	"strings"
