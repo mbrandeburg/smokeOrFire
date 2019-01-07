@@ -2,15 +2,42 @@ package main
 
 import (
 	"github.com/gophercises/deck"	
+	"strings"
 	"fmt"
 )
+
+// func main() {
+// 	cards := deck.New(deck.Shuffle)
+// 	var card deck.Card
+// 	for i := 0; i < 10; i++ { //let's iterate over (aka deal out) 10 cards to start with
+// 		card, cards = cards[0], cards[1:] //pulling out the first card, leaving a slice leftover with all the rest of cards till the i++ iterator runs out
+// 		fmt.Println(card)
+// 	}
+// 	fmt.Println("End of 10 card deal.")
+// }
+
+
+// VERSION 2: YOU'RE GIVEN ALL THE CARDS
 
 func main() {
 	cards := deck.New(deck.Shuffle)
 	var card deck.Card
-	for i := 0; i < 10; i++ { //let's iterate over (aka deal out) 10 cards to start with
-		card, cards = cards[0], cards[1:] //pulling out the first card, leaving a slice leftover with all the rest of cards till the i++ iterator runs out
-		fmt.Println(card)
+	// var hand []deck.Card // your hand is a slice of the deck
+	for i := 0; i < len(cards); i++ {
+		card, cards = cards[0], cards[1:]
+		fmt.Println(card) // how come this person only gets half? You print out 26 of the 52 cards
+		// hand = append(hand, card)
+		}
+	// fmt.Println("Player 1:", hand)
+}
+
+
+// make a player hand
+type Hand []deck.Card 
+func (h Hand) String() string {
+	strs := make([]string, len(h))
+	for i := range h { // i is that first, so its index (if we did , smthg then smthg would be value)
+		strs[i] = h[i].String()
 	}
-	fmt.Println("End of 10 card deal.")
+	return strings.Join(strs, ", ")
 }
