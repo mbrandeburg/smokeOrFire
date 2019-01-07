@@ -12,4 +12,5 @@ func main() {
 		card, cards = cards[0], cards[1:] //pulling out the first card, leaving a slice leftover with all the rest of cards till the i++ iterator runs out
 		fmt.Println(card)
 	}
+	fmt.Println("End of 10 card deal.")
 }
