@@ -85,7 +85,7 @@ func main() {
 		card, cards = draw(cards)
 		p.Hand = append(p.Hand,card)
 		time.Sleep(1 * time.Second)
-		fmt.Printf("Player %d: (S)moke or (F)ire?\n", p.Number)
+		fmt.Printf("\nPlayer %d: (S)moke or (F)ire?\n", p.Number)
 		fmt.Scanf("%s\n", &input)
 		if strings.ToLower(input) == "s" {
 			switch card.Suit { //already append the hand above
@@ -113,7 +113,7 @@ func main() {
 			time.Sleep(1 * time.Second)
 			
 			prev := p.Hand[round]
-			fmt.Printf("Player %d, last hand you drew a %s, so do you think: (H)igher or (L)ower?\n", p.Number, prev)
+			fmt.Printf("\nPlayer %d, last hand you drew a %s, so do you think: (H)igher or (L)ower?\n", p.Number, prev)
 			fmt.Scanf("%s\n", &input)
 
 			
@@ -135,7 +135,6 @@ func main() {
 					}
 				}
 				time.Sleep(1 * time.Second) // pause afer the player's round
-				fmt.Println("\n")
 			} 
 		} else if round == 1 {
 			// fmt.Println("This will be the inside/outside round.")
@@ -146,7 +145,7 @@ func main() {
 			time.Sleep(1 * time.Second)
 			
 			prev := p.Hand[round]
-			fmt.Printf("Player %d, you've drawn %s and %s, so do you think: (I)nside or (O)utside?\n", p.Number, p.Hand[0], prev)
+			fmt.Printf("\nPlayer %d, you've drawn %s and %s, so do you think: (I)nside or (O)utside?\n", p.Number, p.Hand[0], prev)
 			fmt.Scanf("%s\n", &input)
 			
 			// need to determine max and min of p.Hand for inside or outside, since could have come in any order during the previous rounds
@@ -172,14 +171,33 @@ func main() {
 					}
 				}
 			}
-				time.Sleep(1 * time.Second) // pause afer the player's round
-				fmt.Println("\n")
+			time.Sleep(1 * time.Second) // pause afer the player's round
 
 		} else if round == 2 {
-			fmt.Println("This will be the odd/even round.")
-			// next round in the loop! (for _, p := range players ...)
+			// fmt.Println("This will be the odd/even round.")
+			for _, p := range players {
+			card, cards = draw(cards)
+			p.Hand = append(p.Hand,card)
+			time.Sleep(1 * time.Second)
+			
+			fmt.Printf("\nPlayer %d, do you think: (O)dd or (E)ven?\n", p.Number)
+			fmt.Scanf("%s\n", &input)
+			
+			if strings.ToLower(input) == "e" {
+				if int(card.Rank) % 2 == 0 {
+				fmt.Printf("Player%d's card of %s is even and is safe!\n", p.Number, card)
+					} else {
+					fmt.Printf("Player%d's card of %s is odd and he or she has to drink for one second.\n", p.Number, card)
+				} } else { // they chose odd
+					if int(card.Rank) % 2 == 0 {
+						fmt.Printf("Player%d's card of %s is even and he or she has to drink for one second.\n", p.Number, card)
+					} else {
+						fmt.Printf("Player%d's card of %s is odd and is safe!\n", p.Number, card)
+					}
+				}
+			}
 		}
-		
+		time.Sleep(1 * time.Second) // pause afer the player's round
 	}		
 	fmt.Println("Now begins the real game... the good, the bad, and the ugly")
 	time.Sleep(1 * time.Second)
