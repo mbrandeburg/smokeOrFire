@@ -1,3 +1,5 @@
+// Smoke Or Fire. The card game introduced by Kyle Durham. Coded into digital form by Matthew Brandeburg in January 2019
+
 package main
 
 // Other Notes:
