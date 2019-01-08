@@ -222,7 +222,14 @@ func main() {
 		*/
 
 		fmt.Println("\nLastly, now for the bonus ugly card!\n")
-		fmt.Println(ugly1)
+		// fmt.Println(ugly1)
+		for _, p := range players {
+			for i := 0; i < 4; i++ {
+				if int(p.Hand[i].Rank) == int(ugly1.Rank) {
+					fmt.Println("Player%d matched with the %s and has to drink for %d seconds!", p.Number, ugly1, int(ugly1.Rank))
+					}
+				}
+			}
 	} else if newLen == 2 {
 		fmt.Println("There will be two bonus ugly cards!")
 		
