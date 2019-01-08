@@ -5,6 +5,7 @@ package main
 import (
 	"github.com/gophercises/deck"	
 	// "strings"
+	"time"
 	"fmt"
 )
 
@@ -40,6 +41,7 @@ func main() {
 			var input string
 
 			fmt.Println("...and...for player1...")
+			time.Sleep(1 * time.Second)
 			fmt.Println("(S)moke or (F)ire?")
 			fmt.Scanf("%s\n", &input)
 				switch input {
@@ -60,6 +62,7 @@ func main() {
 						fmt.Printf("Player1 drew the %s and has to drink for one second.\n", player1[0])
 					}
 				}
+			time.Sleep(2 * time.Second) // take a pause between turns!
 			fmt.Println("Player2, which do you chose?")
 			fmt.Println("(S)moke or (F)ire?")
 			fmt.Scanf("%s\n", &input)
