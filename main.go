@@ -25,33 +25,102 @@ func main() {
 	fmt.Println("SMOKE\n OR\n FIRE\n") //FIRE fire fire fire (whisper) fire
 	fmt.Println("I have two questions for you..")
 
-	fmt.Println("How many players are there?")
-	/* 
-			FILL THIS IN LATER
-			need a way to make multiple players not just 1
+	var player_count int
+	fmt.Println("How many players are there? (2-8)")
+		fmt.Scanf("%d\n", &player_count)
+		switch player_count {
+		default:
+			fmt.Println("Invalid number of players. Sorry.")
+		case 2:
+			var player1 []deck.Card
+			var player2 []deck.Card
+			var input string
 
-	*/
-
-	var player1 []deck.Card
-
-	fmt.Println("...and...for player1...")
-
-	fmt.Println("(S)moke or (F)ire?")
-	var input string
-	fmt.Scanf("%s\n", &input)
-		switch input {
-		case "s":
-			card, cards = draw(cards)
-			// score := int(card.Rank)
-			// fmt.Println(score)
-			player1 = append(player1, card)
-			fmt.Println(player1)
-			fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank)) //.Score()
-		case "f":
-			card, cards = draw(cards)
-			player1 = append(player1, card)
-			fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank)) //.Score()
+			fmt.Println("...and...for player1...")
+			fmt.Println("(S)moke or (F)ire?")
+			fmt.Scanf("%s\n", &input)
+				switch input {
+				case "s":
+					card, cards = draw(cards)
+					player1 = append(player1, card)
+					fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
+				case "f":
+					card, cards = draw(cards)
+					player1 = append(player1, card)
+					fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
+				}
+			fmt.Println("Player2, which do you chose?")
+			fmt.Println("(S)moke or (F)ire?")
+			fmt.Scanf("%s\n", &input)
+				switch input {
+				case "s":
+					card, cards = draw(cards)
+					player2 = append(player2, card)
+					fmt.Printf("Player2 drew the %s, so drink for %v seconds!\n", player2[0], int(card.Rank))
+				case "f":
+					card, cards = draw(cards)
+					player2 = append(player2, card)
+					fmt.Printf("Player2 drew the %s, so drink for %v seconds!\n", player2[0], int(card.Rank))
+				}
+		// case 3:
+		// 	var player1 []deck.Card
+		// 	var player2 []deck.Card
+		// 	var player3 []deck.Card
+		// case 4:
+		// 	var player1 []deck.Card
+		// 	var player2 []deck.Card
+		// 	var player3 []deck.Card
+		// 	var player4 []deck.Card
+		// case 5:
+		// 	var player1 []deck.Card
+		// 	var player2 []deck.Card
+		// 	var player3 []deck.Card
+		// 	var player4 []deck.Card
+		// 	var player5 []deck.Card
+		// case 6:
+		// 	var player1 []deck.Card
+		// 	var player2 []deck.Card
+		// 	var player3 []deck.Card
+		// 	var player4 []deck.Card
+		// 	var player5 []deck.Card
+		// 	var player6 []deck.Card
+		// case 7:
+		// 	var player1 []deck.Card
+		// 	var player2 []deck.Card
+		// 	var player3 []deck.Card
+		// 	var player4 []deck.Card
+		// 	var player5 []deck.Card
+		// 	var player6 []deck.Card
+		// 	var player7 []deck.Card
+		// case 8:
+		// 	var player1 []deck.Card
+		// 	var player2 []deck.Card
+		// 	var player3 []deck.Card
+		// 	var player4 []deck.Card
+		// 	var player5 []deck.Card
+		// 	var player6 []deck.Card
+		// 	var player7 []deck.Card
+		// 	var player8 []deck.Card
 		}
+////////// CAN I JUST MAKE IT DEPEND ON CASE HERE? OR IS IT EASIER TO CUT AND PASTE INTO EACH CASE?
+	// fmt.Println("...and...for player1...")
+
+	// fmt.Println("(S)moke or (F)ire?")
+	// var input string
+	// fmt.Scanf("%s\n", &input)
+	// 	switch input {
+	// 	case "s":
+	// 		card, cards = draw(cards)
+	// 		// score := int(card.Rank)
+	// 		// fmt.Println(score)
+	// 		player1 = append(player1, card)
+	// 		// fmt.Println(player1)
+	// 		fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank)) //.Score()
+	// 	case "f":
+	// 		card, cards = draw(cards)
+	// 		player1 = append(player1, card)
+	// 		fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank)) //.Score()
+	// 	}
 }
 
 
