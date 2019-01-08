@@ -1,7 +1,7 @@
 package main
 
 // Other Notes:
-//$ gomobile build -target=ios -bundleid=smokeOrFire golang.org/x/mobile/example/basic
+//$ gomobile build -target=ios -bundleid=smokeOrFire github.com/gophercises/smokeOrFire
 //$ git push origin functionalied:master
 // fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
 
@@ -19,6 +19,20 @@ type Player struct {
 
 func draw(cards []deck.Card) (deck.Card, []deck.Card){
 	return cards[0], cards[1:]	
+}
+
+func min(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a >= b {
+		return a
+	}
+	return b
 }
 
 
@@ -119,10 +133,46 @@ func main() {
 					}
 				}
 				time.Sleep(1 * time.Second) // pause afer the player's round
+				fmt.Println("\n")
 			} 
 		} else if round == 1 {
-			fmt.Println("This will be the inside/outside round.")
+			// fmt.Println("This will be the inside/outside round.")
 			// next round in the loop! (for _, p := range players ...)
+			for _, p := range players {
+			card, cards = draw(cards)
+			p.Hand = append(p.Hand,card)
+			time.Sleep(1 * time.Second)
+			
+			prev := p.Hand[round]
+			fmt.Printf("Player %d, you've drawn %s and %s, so do you think: (I)nside or (O)utside?\n", p.Number, p.Hand[0], prev)
+			fmt.Scanf("%s\n", &input)
+			
+			// need to determine max and min of p.Hand for inside or outside, since could have come in any order during the previous rounds
+			min1 := min(int(p.Hand[0].Rank),int(p.Hand[1].Rank))
+			max1 := max(int(p.Hand[0].Rank),int(p.Hand[1].Rank))
+			// fmt.Println(min1,max1) // it works!
+			
+			if int(card.Rank) == min1 || int(card.Rank) == max1 {
+				fmt.Printf("Player%d had a tie and is safe!\n", p.Number)
+				continue
+			}
+
+			if strings.ToLower(input) == "i" { // I need to make a minimum and a maximum function
+				if int(card.Rank) > min1 || int(card.Rank) < max1 {
+				fmt.Printf("Player%d's card of %s is inside and is safe!\n", p.Number, card)
+					} else {
+					fmt.Printf("Player%d's card of %s is outside and he or she has to drink for one second.\n", p.Number, card)
+				} } else { // they chose outside
+					if int(card.Rank) > max1 || int(card.Rank) < min1 {
+						fmt.Printf("Player%d's card of %s is outside and is safe!\n", p.Number, card)
+					} else {
+						fmt.Printf("Player%d's card of %s is inside and he or she has to drink for one second.\n", p.Number, card)
+					}
+				}
+			}
+				time.Sleep(1 * time.Second) // pause afer the player's round
+				fmt.Println("\n")
+
 		} else if round == 2 {
 			fmt.Println("This will be the odd/even round.")
 			// next round in the loop! (for _, p := range players ...)
@@ -131,5 +181,6 @@ func main() {
 	}		
 	fmt.Println("Now begins the real game... the good, the bad, and the ugly")
 	time.Sleep(1 * time.Second)
+	fmt.Println("\n")
 	// Now for everything else I guess...
 }
