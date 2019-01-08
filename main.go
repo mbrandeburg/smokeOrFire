@@ -46,3 +46,6 @@ func (h Hand) String() string {
 	return strings.Join(strs, ", ")
 }
 
+
+// make a series of switches - so you base it on number of players? if 2, then trigger draw function for two players, etc.
+// make it custotmizable up to 8 players
