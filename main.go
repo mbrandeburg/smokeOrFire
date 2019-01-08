@@ -16,7 +16,16 @@ func draw(cards []deck.Card) (deck.Card, []deck.Card){
 func main() {
 	cards := deck.New(deck.Shuffle)
 	var card deck.Card
-	for i := 0; i < 52; i++ { // not <= b/c there's a 0th card
+	fmt.Println("\n\n\nWELCOME TO\n")
+	fmt.Println("SMOKE\n OR\n FIRE\n") //FIRE fire fire fire (whisper) fire
+	fmt.Println("I have two questions for you..")
+
+	fmt.Println("How many players are there?")
+	fmt.Println("...and...for player1...")
+
+	fmt.Println("Smoke or Fire?")
+
+	for i := 0; i < 1; i++ { // not <=52 b/c there's a 0th card
 		card, cards = draw(cards)
 		fmt.Println(card)
 		// fmt.Println(i)
