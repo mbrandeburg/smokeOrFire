@@ -4,7 +4,7 @@ package main
 
 import (
 	"github.com/gophercises/deck"	
-	// "strings"
+	"strings"
 	"time"
 	"fmt"
 )
@@ -21,6 +21,11 @@ func draw(cards []deck.Card) (deck.Card, []deck.Card){
 // 	return score
 // }
 
+type Player struct {
+	Number int
+	Hand []deck.Card
+}
+
 func main() {
 	cards := deck.New(deck.Shuffle)
 	var card deck.Card
@@ -28,13 +33,77 @@ func main() {
 	fmt.Println("SMOKE\n OR\n FIRE\n") //FIRE fire fire fire (whisper) fire
 	fmt.Println("I have two questions for you..")
 
-	var player_count int
-	fmt.Println("How many players are there? (2-8)")
-		fmt.Scanf("%d\n", &player_count)
-		switch player_count {
-		default:
-			fmt.Println("Invalid number of players. Sorry.")
-			// for Chris - is there a way to hit the default case on a switch but try again?
+	var playerCount int
+	for {
+		fmt.Println("How many players are there? (2-8)")
+		fmt.Scanf("%d\n", &playerCount)
+		if playerCount >= 2 && playerCount <= 8 {
+			break
+		}
+	}
+
+	var players []*Player
+	for i := 0; i < playerCount; i++ {
+		players = append(players, &Player {
+			Number: i, 
+			})
+		}
+
+	// for currPlayer := 0; ; currPlayer = (currPlayer + 1) % len(players){
+	
+	for _, p := range players {
+		card, cards = draw(cards)
+		p.Hand = append(p.Hand,card)
+		var input string
+		time.Sleep(1 * time.Second)
+		fmt.Printf("Player %d: (S)moke or (F)ire?\n", p.Number)
+		fmt.Scanf("%s\n", &input)
+		if strings.ToLower(input) == "s" {
+			switch card.Suit {
+			case deck.Spade, deck.Club:
+				// safe
+			case deck.Diamond, deck.Heart:
+				//oops
+			}
+
+		} else {
+
+		}
+
+	}
+	for round := 0; round < 3; round ++ {
+		for _, p := range players {
+		card, cards = draw(cards)
+		p.Hand = append(p.Hand,card)
+		
+		time.Sleep(1 * time.Second)
+		fmt.Printf("Player %d: (H)igher or (L)ower?\n", p.Number)
+		fmt.Scanf("%s\n", &input)
+
+		prev := p.Hand[round]
+		if card.Rank == prev.Rank {
+			//safe
+			continue
+		}
+
+		if strings.ToLower(input) == "h" {
+			card.Rank > prev.Rank {
+			// safe
+			continue
+			} else {
+
+		}
+
+	}		
+	// 
+
+}
+
+	
+
+
+
+		switch playerCount {
 		case 2:
 			var player1 []deck.Card
 			var player2 []deck.Card
@@ -84,6 +153,7 @@ func main() {
 						fmt.Printf("Player1 drew the %s and has to drink for one second.\n", player2[0])
 					}
 				}
+			time.Sleep(1 * time.Second) // pause before next question series
 		// case 3:
 		// 	var player1 []deck.Card
 		// 	var player2 []deck.Card
@@ -123,6 +193,9 @@ func main() {
 		// 	var player6 []deck.Card
 		// 	var player7 []deck.Card
 		// 	var player8 []deck.Card
+		default:
+			fmt.Println("Invalid number of players. Sorry.")
+			// for Chris - is there a way to hit the default case on a switch but try again?
 		}
 ////////// CAN I JUST MAKE IT DEPEND ON CASE HERE? OR IS IT EASIER TO CUT AND PASTE INTO EACH CASE?
 	// fmt.Println("...and...for player1...")
