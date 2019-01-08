@@ -90,38 +90,46 @@ func main() {
 	time.Sleep(1 * time.Second) // pause afer the player's round
 
 	for round := 0; round < 3; round ++ {
-		for _, p := range players {
+		if round == 0 {
+			for _, p := range players {
 			card, cards = draw(cards)
 			p.Hand = append(p.Hand,card)
 			time.Sleep(1 * time.Second)
-			fmt.Printf("Player %d: (H)igher or (L)ower?\n", p.Number)
+			
+			prev := p.Hand[round]
+			fmt.Printf("Player %d, last hand you drew a %s, so do you think: (H)igher or (L)ower?\n", p.Number, prev)
 			fmt.Scanf("%s\n", &input)
 
-			prev := p.Hand[round]
+			
 			if card.Rank == prev.Rank {
-				fmt.Printf("Player%d had a tie with %s this round and %s last round, and is safe!\n", p.Number, p.Hand[round], prev)
+				fmt.Printf("Player%d had a tie with %s this round and %s last round, and is safe!\n", p.Number, card, prev)
 				continue
 			}
 
 			if strings.ToLower(input) == "h" {
 				if card.Rank > prev.Rank {
-				fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and is safe!\n", p.Number, p.Hand[round], prev)
+				fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and is safe!\n", p.Number, card, prev)
 					} else {
-					fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, p.Hand[round], prev)
+					fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, card, prev)
 				} } else { // they chose lower
 					if card.Rank < prev.Rank {
-						fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and is safe!\n", p.Number, p.Hand[round], prev)
+						fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and is safe!\n", p.Number, card, prev)
 					} else {
-						fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, p.Hand[round], prev)
+						fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, card, prev)
 					}
 				}
 				time.Sleep(1 * time.Second) // pause afer the player's round
 			} 
-
-		// next round in the loop! (for _, p := range players ...)
+		} else if round == 1 {
+			fmt.Println("This will be the inside/outside round.")
+			// next round in the loop! (for _, p := range players ...)
+		} else if round == 2 {
+			fmt.Println("This will be the odd/even round.")
+			// next round in the loop! (for _, p := range players ...)
+		}
+		
 	}		
-
-
+	fmt.Println("Now begins the real game... the good, the bad, and the ugly")
+	time.Sleep(1 * time.Second)
 	// Now for everything else I guess...
-
 }
