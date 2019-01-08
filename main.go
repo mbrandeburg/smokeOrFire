@@ -65,7 +65,7 @@ func main() {
 
 	var deckCount int
 	for {
-		fmt.Println("Second, how many decks are we playing with? (1-20)")
+		fmt.Println("\nSecond, how many decks are we playing with? (1-20)")
 		fmt.Scanf("%d\n", &deckCount)
 		if deckCount >= 1 && deckCount <= 20 {
 			break
@@ -78,9 +78,9 @@ func main() {
 
 	// for currPlayer := 0; ; currPlayer = (currPlayer + 1) % len(players){
 	time.Sleep(1 * time.Second)
-	fmt.Println("Lastly, for Player1, my question is...")
+	fmt.Println("\nLastly, for Player1, my question is...")
+	
 	var input string
-
 	for _, p := range players {
 		card, cards = draw(cards)
 		p.Hand = append(p.Hand,card)
@@ -199,8 +199,14 @@ func main() {
 		}
 		time.Sleep(1 * time.Second) // pause afer the player's round
 	}		
-	fmt.Println("Now begins the real game... the good, the bad, and the ugly")
+	fmt.Println("\nNow begins the real game... the good, the bad, and the ugly")
 	time.Sleep(1 * time.Second)
-	fmt.Println("\n")
-	// Now for everything else I guess...
+	
+	// need a for loop to play through the remainder of the cards
+	// need a triple loop, so needs to know ahead of time how many goes it can take (len(cards)/3) with remainder set as ugly
+		// Take stock of the players hands each round
+	for _, p := range players {
+		fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+	}
+
 }
