@@ -26,26 +26,32 @@ func main() {
 	cards := deck.New(deck.Shuffle)
 	var card deck.Card
 	fmt.Println("\n\n\nWELCOME TO\n")
+	time.Sleep(1 * time.Second)
 	fmt.Println("SMOKE\n OR\n FIRE\n") //FIRE fire fire fire (whisper) fire
+	time.Sleep(1 * time.Second)
 	fmt.Println("I have two questions for you..")
+	time.Sleep(1 * time.Second)
 
 	var playerCount int
 	for {
-		fmt.Println("How many players are there? (2-8)")
+		fmt.Println("First, how many players are there? (2-20)")
 		fmt.Scanf("%d\n", &playerCount)
-		if playerCount >= 2 && playerCount <= 8 {
+		if playerCount >= 2 && playerCount <= 20 {
 			break
 		}
+		fmt.Println("Please enter a number in the valid range.")
 	}
 
 	var players []*Player
-	for i := 0; i < playerCount; i++ { // what happens after we make it i := 0 and i <= playerCount ??
+	for i := 1; i <= playerCount; i++ { 
 		players = append(players, &Player {
 			Number: i, 
 			})
 		}
 
 	// for currPlayer := 0; ; currPlayer = (currPlayer + 1) % len(players){
+	time.Sleep(1 * time.Second)
+	fmt.Println("Second, for Player1, my question is...")
 	for _, p := range players {
 		card, cards = draw(cards)
 		p.Hand = append(p.Hand,card)
@@ -70,38 +76,37 @@ func main() {
 		}
 	}
 
-	for round := 0; round < 3; round ++ {
-		for _, p := range players {
-			card, cards = draw(cards)
-			p.Hand = append(p.Hand,card)
+	// for round := 0; round < 3; round ++ {
+	// 	for _, p := range players {
+	// 		card, cards = draw(cards)
+	// 		p.Hand = append(p.Hand,card)
 			
-			time.Sleep(1 * time.Second)
-			fmt.Printf("Player %d: (H)igher or (L)ower?\n", p.Number)
-			fmt.Scanf("%s\n", &input)
+	// 		time.Sleep(1 * time.Second)
+	// 		fmt.Printf("Player %d: (H)igher or (L)ower?\n", p.Number)
+	// 		fmt.Scanf("%s\n", &input)
 
-			prev := p.Hand[round]
-			if card.Rank == prev.Rank {
-				fmt.Printf("Player%d had a tie with %s and is safe!\n", p.Number, p.Hand[round])
-				continue
-			}
+	// 		prev := p.Hand[round]
+	// 		if card.Rank == prev.Rank {
+	// 			fmt.Printf("Player%d had a tie with %s and is safe!\n", p.Number, p.Hand[round])
+	// 			continue
+	// 		}
 
-			if strings.ToLower(input) == "h" {
-				if card.Rank > prev.Rank {
-				fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and is safe!\n", p.Number, p.Hand[round], prev)
-				continue
-					} else {
-					fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, p.Hand[round], prev)
-				} else { // they chose lower
-					if card.Rank < prev.Rank {
-						fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and is safe!\n", p.Number, p.Hand[round], prev)
-					} else {
-						fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, p.Hand[round], prev)
-					}
-				}
-			}
-		}
-		// next round in the loop! (for _, p := range players ...)
-	}		
+	// 		if strings.ToLower(input) == "h" {
+	// 			if card.Rank > prev.Rank {
+	// 			fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and is safe!\n", p.Number, p.Hand[round], prev)
+	// 				} else {
+	// 				fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, p.Hand[round], prev)
+	// 			} else { // they chose lower
+	// 				if card.Rank < prev.Rank {
+	// 					fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and is safe!\n", p.Number, p.Hand[round], prev)
+	// 				} else {
+	// 					fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, p.Hand[round], prev)
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	// next round in the loop! (for _, p := range players ...)
+	// }		
 
 
 	// Now for everything else I guess...
