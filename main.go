@@ -202,11 +202,58 @@ func main() {
 	fmt.Println("\nNow begins the real game... the good, the bad, and the ugly")
 	time.Sleep(1 * time.Second)
 	
-	// need a for loop to play through the remainder of the cards
-	// need a triple loop, so needs to know ahead of time how many goes it can take (len(cards)/3) with remainder set as ugly
-		// Take stock of the players hands each round
+
 	for _, p := range players {
 		fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
 	}
+
+
+
+	// need a for loop to play through the remainder of the cards
+	fmt.Println(len(cards)) //For comparison, remember, there should be 44 (52-8)")
+	newLen := len(cards) % 3
+	if newLen == 1 { // and if we play the games in these, then we dont have to worry about calling them back later
+		fmt.Println("There will be one bonus ugly card!")
+		ugly1 :=  cards[len(cards)-1]
+		cards = cards[:len(cards)-1]
+
+		/* 
+		code what happens
+		*/
+
+		fmt.Println("\nLastly, now for the bonus ugly card!\n")
+		fmt.Println(ugly1)
+	} else if newLen == 2 {
+		fmt.Println("There will be two bonus ugly cards!")
+		
+		ugly1 := cards[len(cards)-1]
+		cards = cards[:len(cards)-1]
+
+		ugly2 := cards[len(cards)-1]
+		cards = cards[:len(cards)-1] // print(len(cards)) // should now be 42 (edit: and it is!)
+
+		/* 
+		code what happens
+		*/
+
+		fmt.Println("\nLastly, now for the last two bonus ugly cards!\n")
+		// fmt.Println(int(ugly1.Rank))
+		// fmt.Println(int(ugly2.Rank))
+		for _, p := range players {
+			for i := 0; i < 4; i++ {
+				if int(p.Hand[i].Rank) == int(ugly1.Rank) {
+					fmt.Println("Player%d matched with the %s and has to drink for %d seconds!", p.Number, ugly1, int(ugly1.Rank))
+					} else if int(p.Hand[i].Rank) == int(ugly2.Rank) {
+						fmt.Println("Player%d matched with the %s and has to drink for %d seconds!", p.Number, ugly2, int(ugly1.Rank))
+						}
+					}
+			}
+	} else {
+		fmt.Println("There won't be any bonus ugly cards!")
+	}
+
+	// need a triple loop, so needs to know ahead of time how many goes it can take (len(cards)/3) with remainder set as ugly
+		// Take stock of the players hands each round
+	
 
 }
