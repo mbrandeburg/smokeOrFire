@@ -9,6 +9,8 @@ import (
 )
 
 
+// fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
+
 func draw(cards []deck.Card) (deck.Card, []deck.Card){
 	return cards[0], cards[1:]	
 }
@@ -31,6 +33,7 @@ func main() {
 		switch player_count {
 		default:
 			fmt.Println("Invalid number of players. Sorry.")
+			// for Chris - is there a way to hit the default case on a switch but try again?
 		case 2:
 			var player1 []deck.Card
 			var player2 []deck.Card
@@ -43,11 +46,19 @@ func main() {
 				case "s":
 					card, cards = draw(cards)
 					player1 = append(player1, card)
-					fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
+					if card.Suit.String() == "Spade" || card.Suit.String() == "Club" {
+						fmt.Printf("Player1 drew the %s and is safe this round.\n", player1[0])
+					} else {
+						fmt.Printf("Player1 drew the %s and has to drink for one second.\n", player1[0])
+					}
 				case "f":
 					card, cards = draw(cards)
 					player1 = append(player1, card)
-					fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
+					if card.Suit.String() == "Diamond" || card.Suit.String() == "Heart" {
+						fmt.Printf("Player1 drew the %s and is safe this round.\n", player1[0])
+					} else {
+						fmt.Printf("Player1 drew the %s and has to drink for one second.\n", player1[0])
+					}
 				}
 			fmt.Println("Player2, which do you chose?")
 			fmt.Println("(S)moke or (F)ire?")
@@ -56,11 +67,19 @@ func main() {
 				case "s":
 					card, cards = draw(cards)
 					player2 = append(player2, card)
-					fmt.Printf("Player2 drew the %s, so drink for %v seconds!\n", player2[0], int(card.Rank))
+					if card.Suit.String() == "Spade" || card.Suit.String() == "Club" {
+						fmt.Printf("Player1 drew the %s and is safe this round.\n", player2[0])
+					} else {
+						fmt.Printf("Player1 drew the %s and has to drink for one second.\n", player2[0])
+					}
 				case "f":
 					card, cards = draw(cards)
 					player2 = append(player2, card)
-					fmt.Printf("Player2 drew the %s, so drink for %v seconds!\n", player2[0], int(card.Rank))
+					if card.Suit.String() == "Diamond" || card.Suit.String() == "Heart" {
+						fmt.Printf("Player1 drew the %s and is safe this round.\n", player2[0])
+					} else {
+						fmt.Printf("Player1 drew the %s and has to drink for one second.\n", player2[0])
+					}
 				}
 		// case 3:
 		// 	var player1 []deck.Card
