@@ -21,11 +21,26 @@ func main() {
 	fmt.Println("I have two questions for you..")
 
 	fmt.Println("How many players are there?")
+	var player1 []deck.Card
+
 	fmt.Println("...and...for player1...")
 
-	fmt.Println("Smoke or Fire?")
+	fmt.Println("(S)moke or (F)ire?")
+	var input string
+	fmt.Scanf("%s\n", &input)
+		switch input {
+		case "s":
+			card, cards = draw(cards)
+			player1 = append(player1, card)
+			fmt.Println(player1)
+		case "f":
+			card, cards = draw(cards)
+			player1 = append(player1, card)
+			fmt.Println(player1)
+		}
+	
 
-	for i := 0; i < 1; i++ { // not <=52 b/c there's a 0th card
+	for i := 0; i < 2; i++ { // not <=52 b/c there's a 0th card
 		card, cards = draw(cards)
 		fmt.Println(card)
 		// fmt.Println(i)
