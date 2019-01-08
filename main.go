@@ -1,6 +1,9 @@
 package main
 
+// Other Notes:
 //$ gomobile build -target=ios -bundleid=smokeOrFire golang.org/x/mobile/example/basic
+//$ git push origin functionalied:master
+// fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
 
 import (
 	"github.com/gophercises/deck"	
@@ -8,9 +11,6 @@ import (
 	"time"
 	"fmt"
 )
-
-
-// fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
 
 type Player struct {
 	Number int
