@@ -25,12 +25,14 @@ func main() {
 	cards := deck.New(deck.Shuffle)
 	var card deck.Card
 	// var hand []deck.Card // your hand is a slice of the deck
-	for i := 0; i < len(cards); i++ {
+	for i := 0; i <= len(cards) *2 + 50; i++ { // now why is that???
 		card, cards = cards[0], cards[1:]
 		fmt.Println(card) // how come this person only gets half? You print out 26 of the 52 cards
 		// hand = append(hand, card)
 		}
 	// fmt.Println("Player 1:", hand)
+	fmt.Println("And the rest are:")
+	fmt.Println(cards)
 }
 
 
@@ -43,3 +45,4 @@ func (h Hand) String() string {
 	}
 	return strings.Join(strs, ", ")
 }
+
