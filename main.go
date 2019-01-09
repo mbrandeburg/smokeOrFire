@@ -500,4 +500,5 @@ func main() {
 	fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 }
 
+// env GOOS=windows GOARCH=386 go build -v github.com/gophercises/smokeOrFire
 //$ gomobile build -target=ios -bundleid=smokeOrFire github.com/gophercises/smokeOrFire
