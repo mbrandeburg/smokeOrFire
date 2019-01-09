@@ -2,11 +2,6 @@
 
 package main
 
-// Other Notes:
-//$ gomobile build -target=ios -bundleid=smokeOrFire github.com/gophercises/smokeOrFire
-//$ git push origin functionalied:master
-// fmt.Printf("Player1 drew the %s, so drink for %v seconds!\n", player1[0], int(card.Rank))
-
 import (
 	"github.com/gophercises/deck"	
 	"strings"
@@ -504,3 +499,5 @@ func main() {
 	fmt.Printf("\nThanks for playing! (Hit enter to quit)\n")
 	fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 }
+
+//$ gomobile build -target=ios -bundleid=smokeOrFire github.com/gophercises/smokeOrFire
