@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 	"fmt"
+	_ "golang.org/x/mobile/app" // for the mobile version
 )
 
 type Player struct {
