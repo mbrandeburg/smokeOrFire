@@ -198,22 +198,27 @@ func main() {
 			}
 		}
 		time.Sleep(1 * time.Second) // pause afer the player's round
-	}		
-	fmt.Println("\nNow begins the real game... the good, the bad, and the ugly")
+	}
+	fmt.Println("***********************************************************")
+	fmt.Println("***********************************************************")
+	fmt.Println("***********************************************************")
+	time.Sleep(1 * time.Second)	
+	fmt.Println("\nNow begins the real game... the good, the bad, and the ugly\n")
 	time.Sleep(1 * time.Second)
 	
 
+	fmt.Println("To recap, the players have the following hands:")
 	for _, p := range players {
 		fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
 	}
-
+	time.Sleep(5 * time.Second)
 
 
 	// need a for loop to play through the remainder of the cards
-	fmt.Println(len(cards)) //For comparison, remember, there should be 44 (52-8)")
+	// fmt.Println(len(cards)) //For comparison, remember, there should be 44 (52-8)")
 	newLen := len(cards) % 3
 	if newLen == 1 { // and if we play the games in these, then we dont have to worry about calling them back later
-		fmt.Println("There will be one bonus ugly card!")
+		fmt.Println("\nThere will be one bonus ugly card!\n")
 		ugly1 :=  cards[len(cards)-1]
 		cards = cards[:len(cards)-1]
 
@@ -223,15 +228,19 @@ func main() {
 
 		fmt.Println("\nLastly, now for the bonus ugly card!\n")
 		// fmt.Println(ugly1)
+		fmt.Printf("\n...%s!\n", ugly1)
+		// Player hand scan function (will need for matching int(card.Rank) for drink hits)
 		for _, p := range players {
 			for i := 0; i < 4; i++ {
 				if int(p.Hand[i].Rank) == int(ugly1.Rank) {
-					fmt.Println("Player%d matched with the %s and has to drink for %d seconds!", p.Number, ugly1, int(ugly1.Rank))
-					}
-				}
+					fmt.Printf("Player%d matched with the %s and has to drink for %d seconds!\n", p.Number, ugly1, int(ugly1.Rank))
+					} 
+				} 
 			}
+			// End of player scan function
+
 	} else if newLen == 2 {
-		fmt.Println("There will be two bonus ugly cards!")
+		fmt.Println("\nThere will be two bonus ugly cards!\n")
 		
 		ugly1 := cards[len(cards)-1]
 		cards = cards[:len(cards)-1]
@@ -243,24 +252,70 @@ func main() {
 		code what happens
 		*/
 
+		var goodStack []deck.Card
+		// var badStack []deck.Card
+		// var uglyStack []deck.Card
+
+		fmt.Printf("Ready to deal first card? (Hit any key)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Scanf("%s\n", &input)
+		for i := 1; i <= len(cards); i++ {
+			if i % 3 == 1 {
+				// Good
+				card, cards = draw(cards)
+				goodStack = append(goodStack, card)
+
+				for _, p := range players {
+					fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+				}
+
+				fmt.Printf("\n...%s!\n", card)
+
+				for _, p := range players {
+					for z := 0; z < 4; z++ {
+						if int(p.Hand[z].Rank) == int(card.Rank) {
+							fmt.Printf("\nPlayer%d matched with the %s and has to give a drink of one second!\n", p.Number, card)
+						} 
+					}
+				}
+
+				fmt.Printf("Ready to for next round? (Hit any key)\n")
+				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+
+				} else if i % 3 == 2 {
+					// Bad
+					fmt.Println("Bad")
+
+					} else if i % 3 == 0 {
+						// Ugly
+						fmt.Println("ugly")
+
+					}
+
+
+
+		}
+		fmt.Printf("To test, the number of cards we didn't deal out, minus bonus uglies, are: %d", len(cards))
+		// End of coding main gameplay
+
 		fmt.Println("\nLastly, now for the last two bonus ugly cards!\n")
 		// fmt.Println(int(ugly1.Rank))
 		// fmt.Println(int(ugly2.Rank))
+		fmt.Printf("\n...%s and %s!\n", ugly1, ugly2)
 		for _, p := range players {
 			for i := 0; i < 4; i++ {
 				if int(p.Hand[i].Rank) == int(ugly1.Rank) {
-					fmt.Println("Player%d matched with the %s and has to drink for %d seconds!", p.Number, ugly1, int(ugly1.Rank))
+					fmt.Printf("Player%d matched with the %s and has to drink for %d seconds!\n", p.Number, ugly1, int(ugly1.Rank))
 					} else if int(p.Hand[i].Rank) == int(ugly2.Rank) {
-						fmt.Println("Player%d matched with the %s and has to drink for %d seconds!", p.Number, ugly2, int(ugly1.Rank))
-						}
+						fmt.Printf("Player%d matched with the %s and has to drink for %d seconds!\n", p.Number, ugly2, int(ugly1.Rank))
+						} 
 					}
 			}
 	} else {
-		fmt.Println("There won't be any bonus ugly cards!")
+		fmt.Println("\nThere won't be any bonus ugly cards!\n")
+		/* 
+		code what happens
+		*/
+
 	}
-
-	// need a triple loop, so needs to know ahead of time how many goes it can take (len(cards)/3) with remainder set as ugly
-		// Take stock of the players hands each round
-	
-
 }
