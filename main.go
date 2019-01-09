@@ -154,7 +154,7 @@ func main() {
 			// fmt.Println(min1,max1) // it works!
 			
 			if int(card.Rank) == min1 || int(card.Rank) == max1 {
-				fmt.Printf("Player%d had a tie and is safe!\n", p.Number)
+				fmt.Printf("Player%d had a tie with %s and is safe!\n", p.Number, card)
 				continue
 			}
 
@@ -222,13 +222,88 @@ func main() {
 		ugly1 :=  cards[len(cards)-1]
 		cards = cards[:len(cards)-1]
 
-		/* 
-		code what happens
-		*/
+		var goodStack []deck.Card
+		var badStack []deck.Card
+		var uglyStack []deck.Card
+
+		fmt.Printf("Ready to deal the first card? (Hit enter)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Scanf("%s\n", &input)
+		deckLength := len(cards)
+		for i := 1; i <= deckLength; i++ {
+			if i % 3 == 1 {
+				// Good
+				card, cards = draw(cards)
+				goodStack = append(goodStack, card)
+
+				for _, p := range players {
+					fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+				}
+				fmt.Println("\nGOOD!")
+				fmt.Printf("...%s!\n", card)
+
+				for _, p := range players {
+					for z := 0; z < 4; z++ {
+						if int(p.Hand[z].Rank) == int(card.Rank) {
+							fmt.Printf("\nPlayer%d matched with the %s (%s) and gets to give a drink of one second!\n", p.Number, card, p.Hand[z])
+						} 
+					}
+				}
+
+				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+
+				} else if i % 3 == 2 {
+					// Bad
+					card, cards = draw(cards)
+					badStack = append(badStack, card)
+
+					for _, p := range players {
+						fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+					}
+					fmt.Println("\nBAD!")
+					fmt.Printf("...%s!\n", card)
+
+					for _, p := range players {
+						for z := 0; z < 4; z++ {
+							if int(p.Hand[z].Rank) == int(card.Rank) {
+								fmt.Printf("\nPlayer%d matched with the %s (%s) and has to drink for one second!\n", p.Number, card, p.Hand[z])
+							} 
+						}
+					}
+
+					fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+					fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+					} else if i % 3 == 0 {
+						// Ugly
+						card, cards = draw(cards)
+						uglyStack = append(uglyStack, card)
+
+						for _, p := range players {
+							fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+						}
+						fmt.Println("\nUGLY!")
+						fmt.Printf("...%s!\n", card)
+
+						for _, p := range players {
+							for z := 0; z < 4; z++ {
+								if int(p.Hand[z].Rank) == int(card.Rank) {
+									fmt.Printf("\nPlayer%d matched with the %s (%s) and has to drink for %d seconds!\n", p.Number, card, p.Hand[z], int(card.Rank))
+								} 
+							}
+						}
+
+						fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+						fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+					}
+		}
 
 		fmt.Println("\nLastly, now for the bonus ugly card!\n")
+		time.Sleep(1 * time.Second)
 		// fmt.Println(ugly1)
-		fmt.Printf("\n...%s!\n", ugly1)
+		fmt.Printf("...%s!\n", ugly1)
 		// Player hand scan function (will need for matching int(card.Rank) for drink hits)
 		for _, p := range players {
 			for i := 0; i < 4; i++ {
@@ -248,17 +323,16 @@ func main() {
 		ugly2 := cards[len(cards)-1]
 		cards = cards[:len(cards)-1] // print(len(cards)) // should now be 42 (edit: and it is!)
 
-		/* 
-		code what happens
-		*/
+		/*  code what happens below for main gameplay (testing if you hadn't noticed on 2 players, 1 deck configuration) */
 
 		var goodStack []deck.Card
-		// var badStack []deck.Card
-		// var uglyStack []deck.Card
+		var badStack []deck.Card
+		var uglyStack []deck.Card
 
-		fmt.Printf("Ready to deal first card? (Hit any key)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Printf("Ready to deal the first card? (Hit enter)\n") //I think this can be a poor man's break as we do all the next rounds
 		fmt.Scanf("%s\n", &input)
-		for i := 1; i <= len(cards); i++ {
+		deckLength := len(cards)
+		for i := 1; i <= deckLength; i++ {
 			if i % 3 == 1 {
 				// Good
 				card, cards = draw(cards)
@@ -267,41 +341,75 @@ func main() {
 				for _, p := range players {
 					fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
 				}
-
-				fmt.Printf("\n...%s!\n", card)
+				fmt.Println("\nGOOD!")
+				fmt.Printf("...%s!\n", card)
 
 				for _, p := range players {
 					for z := 0; z < 4; z++ {
 						if int(p.Hand[z].Rank) == int(card.Rank) {
-							fmt.Printf("\nPlayer%d matched with the %s and has to give a drink of one second!\n", p.Number, card)
+							fmt.Printf("\nPlayer%d matched with the %s (%s) and gets to give a drink of one second!\n", p.Number, card, p.Hand[z])
 						} 
 					}
 				}
 
-				fmt.Printf("Ready to for next round? (Hit any key)\n")
+				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
 				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 
 				} else if i % 3 == 2 {
 					// Bad
-					fmt.Println("Bad")
+					card, cards = draw(cards)
+					badStack = append(badStack, card)
+
+					for _, p := range players {
+						fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+					}
+					fmt.Println("\nBAD!")
+					fmt.Printf("...%s!\n", card)
+
+					for _, p := range players {
+						for z := 0; z < 4; z++ {
+							if int(p.Hand[z].Rank) == int(card.Rank) {
+								fmt.Printf("\nPlayer%d matched with the %s (%s) and has to drink for one second!\n", p.Number, card, p.Hand[z])
+							} 
+						}
+					}
+
+					fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+					fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 					} else if i % 3 == 0 {
 						// Ugly
-						fmt.Println("ugly")
+						card, cards = draw(cards)
+						uglyStack = append(uglyStack, card)
+
+						for _, p := range players {
+							fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+						}
+						fmt.Println("\nUGLY!")
+						fmt.Printf("...%s!\n", card)
+
+						for _, p := range players {
+							for z := 0; z < 4; z++ {
+								if int(p.Hand[z].Rank) == int(card.Rank) {
+									fmt.Printf("\nPlayer%d matched with the %s (%s) and has to drink for %d seconds!\n", p.Number, card, p.Hand[z], int(card.Rank))
+								} 
+							}
+						}
+
+						fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+						fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 					}
-
-
-
 		}
-		fmt.Printf("To test, the number of cards we didn't deal out, minus bonus uglies, are: %d", len(cards))
-		// End of coding main gameplay
+		// fmt.Printf("To test, the number of cards we didn't deal out, minus bonus uglies, are: %d", len(cards))
+		// ********************* End of coding main gameplay *************************************************
 
 		fmt.Println("\nLastly, now for the last two bonus ugly cards!\n")
+		time.Sleep(1 * time.Second)
 		// fmt.Println(int(ugly1.Rank))
 		// fmt.Println(int(ugly2.Rank))
-		fmt.Printf("\n...%s and %s!\n", ugly1, ugly2)
+		fmt.Printf("...%s and %s!\n", ugly1, ugly2)
 		for _, p := range players {
 			for i := 0; i < 4; i++ {
 				if int(p.Hand[i].Rank) == int(ugly1.Rank) {
@@ -313,9 +421,86 @@ func main() {
 			}
 	} else {
 		fmt.Println("\nThere won't be any bonus ugly cards!\n")
-		/* 
-		code what happens
-		*/
+		
+		var goodStack []deck.Card
+		var badStack []deck.Card
+		var uglyStack []deck.Card
+
+		fmt.Printf("Ready to deal the first card? (Hit enter)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Scanf("%s\n", &input)
+		deckLength := len(cards)
+		for i := 1; i <= deckLength; i++ {
+			if i % 3 == 1 {
+				// Good
+				card, cards = draw(cards)
+				goodStack = append(goodStack, card)
+
+				for _, p := range players {
+					fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+				}
+				fmt.Println("\nGOOD!")
+				fmt.Printf("...%s!\n", card)
+
+				for _, p := range players {
+					for z := 0; z < 4; z++ {
+						if int(p.Hand[z].Rank) == int(card.Rank) {
+							fmt.Printf("\nPlayer%d matched with the %s (%s) and gets to give a drink of one second!\n", p.Number, card, p.Hand[z])
+						} 
+					}
+				}
+
+				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+
+				} else if i % 3 == 2 {
+					// Bad
+					card, cards = draw(cards)
+					badStack = append(badStack, card)
+
+					for _, p := range players {
+						fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+					}
+					fmt.Println("\nBAD!")
+					fmt.Printf("...%s!\n", card)
+
+					for _, p := range players {
+						for z := 0; z < 4; z++ {
+							if int(p.Hand[z].Rank) == int(card.Rank) {
+								fmt.Printf("\nPlayer%d matched with the %s (%s) and has to drink for one second!\n", p.Number, card, p.Hand[z])
+							} 
+						}
+					}
+
+					fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+					fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+					} else if i % 3 == 0 {
+						// Ugly
+						card, cards = draw(cards)
+						uglyStack = append(uglyStack, card)
+
+						for _, p := range players {
+							fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
+						}
+						fmt.Println("\nUGLY!")
+						fmt.Printf("...%s!\n", card)
+
+						for _, p := range players {
+							for z := 0; z < 4; z++ {
+								if int(p.Hand[z].Rank) == int(card.Rank) {
+									fmt.Printf("\nPlayer%d matched with the %s (%s) and has to drink for %d seconds!\n", p.Number, card, p.Hand[z], int(card.Rank))
+								} 
+							}
+						}
+
+						fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+						fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
+
+					}
+		}
 
 	}
+	fmt.Printf("\nThanks for playing! (Hit enter to quit)\n")
+	fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 }
