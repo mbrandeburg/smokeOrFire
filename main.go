@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gophercises/deck"
-	_ "golang.org/x/mobile/app"   // for the mobile version
-	_ "golang.org/x/mobile/asset" // for the mobile version
+	// _ "golang.org/x/mobile/app"   // for the mobile version
+	// _ "golang.org/x/mobile/asset" // for the mobile version
 )
 
 type Player struct {
@@ -81,8 +81,9 @@ func main() {
 `
 	byName := `
                                    
-          BY MATTHEW BRANDEBURG                                       
-              FEBRUARY 2019                                             
+        The card game introduced by Kyle Durham 
+        Coded into digital form by Matthew Brandeburg                                       
+        January 2019                                             
 																						
 																						
 	`
@@ -134,7 +135,7 @@ func main() {
 	for _, p := range players {
 		card, cards = draw(cards)
 		p.Hand = append(p.Hand, card)
-		time.Sleep(1 * time.Second)
+		time.Sleep(3 * time.Second)
 		fmt.Printf("\nPlayer %d: (S)moke or (F)ire?\n", p.Number)
 		fmt.Scanf("%s\n", &input)
 		if strings.ToLower(input) == "s" {
@@ -152,7 +153,7 @@ func main() {
 				fmt.Printf("Player %d drew the %s and has to drink for one second.\n", p.Number, p.Hand[0])
 			}
 		} else { // adding fault tolerance by assuming anything other than smoke will be fire - this "dumb" mechanic repeats throughout
-			fmt.Println("You entered an incorrect guess, so you're getting FIRE.")
+			fmt.Printf("You typed an incorrect guess: %s, so you're guessing FIRE.\n", input)
 			switch card.Suit {
 			case deck.Diamond, deck.Heart:
 				fmt.Printf("Player %d drew the %s and is safe this round.\n", p.Number, p.Hand[0])
@@ -161,14 +162,14 @@ func main() {
 			}
 		}
 	}
-	time.Sleep(1 * time.Second) // pause afer the player's round
+	time.Sleep(3 * time.Second) // pause afer the player's round
 
 	for round := 0; round < 3; round++ {
 		if round == 0 {
 			for _, p := range players {
 				card, cards = draw(cards)
 				p.Hand = append(p.Hand, card)
-				time.Sleep(1 * time.Second)
+				time.Sleep(3 * time.Second)
 
 				prev := p.Hand[round]
 				fmt.Printf("\nPlayer %d, last hand you drew a %s, so do you think: (H)igher or (L)ower?\n", p.Number, prev)
@@ -185,14 +186,21 @@ func main() {
 					} else {
 						fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, card, prev)
 					}
+				} else if strings.ToLower(input) == "l" {
+					if card.Rank < prev.Rank {
+						fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and is safe!\n", p.Number, card, prev)
+					} else {
+						fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, card, prev)
+					}
 				} else { // they chose lower
+					fmt.Printf("You typed an incorrect guess: %s, so you're guessing LOWER.\n", input)
 					if card.Rank < prev.Rank {
 						fmt.Printf("Player%d had a lower card with %s than his or her previous card of %s and is safe!\n", p.Number, card, prev)
 					} else {
 						fmt.Printf("Player%d had a higher card with %s than his or her previous card of %s and has to drink for one second.\n", p.Number, card, prev)
 					}
 				}
-				time.Sleep(1 * time.Second) // pause afer the player's round
+				time.Sleep(3 * time.Second) // pause afer the player's round
 			}
 		} else if round == 1 {
 			// fmt.Println("This will be the inside/outside round.")
@@ -222,7 +230,14 @@ func main() {
 					} else {
 						fmt.Printf("Player%d's card of %s is outside and he or she has to drink for one second.\n", p.Number, card)
 					}
+				} else if strings.ToLower(input) == "o" {
+					if int(card.Rank) > max1 || int(card.Rank) < min1 {
+						fmt.Printf("Player%d's card of %s is outside and is safe!\n", p.Number, card)
+					} else {
+						fmt.Printf("Player%d's card of %s is inside and he or she has to drink for one second.\n", p.Number, card)
+					}
 				} else { // they chose outside
+					fmt.Printf("You typed an incorrect guess: %s, so you're guessing OUTSIDE.\n", input)
 					if int(card.Rank) > max1 || int(card.Rank) < min1 {
 						fmt.Printf("Player%d's card of %s is outside and is safe!\n", p.Number, card)
 					} else {
@@ -230,7 +245,7 @@ func main() {
 					}
 				}
 			}
-			time.Sleep(1 * time.Second) // pause afer the player's round
+			time.Sleep(3 * time.Second) // pause afer the player's round
 
 		} else if round == 2 {
 			// fmt.Println("This will be the odd/even round.")
@@ -248,7 +263,14 @@ func main() {
 					} else {
 						fmt.Printf("Player%d's card of %s is odd and he or she has to drink for one second.\n", p.Number, card)
 					}
+				} else if strings.ToLower(input) == "o" {
+					if int(card.Rank)%2 == 0 {
+						fmt.Printf("Player%d's card of %s is even and he or she has to drink for one second.\n", p.Number, card)
+					} else {
+						fmt.Printf("Player%d's card of %s is odd and is safe!\n", p.Number, card)
+					}
 				} else { // they chose odd
+					fmt.Printf("You typed an incorrect guess: %s, so you're guessing ODD.\n", input)
 					if int(card.Rank)%2 == 0 {
 						fmt.Printf("Player%d's card of %s is even and he or she has to drink for one second.\n", p.Number, card)
 					} else {
@@ -257,20 +279,21 @@ func main() {
 				}
 			}
 		}
-		time.Sleep(1 * time.Second) // pause afer the player's round
+		time.Sleep(3 * time.Second) // pause afer the player's round
 	}
+	time.Sleep(5 * time.Second)
 	fmt.Println("***********************************************************")
 	fmt.Println("***********************************************************")
 	fmt.Println("***********************************************************")
 	time.Sleep(1 * time.Second)
 	fmt.Println("\nNow begins the real game... the good, the bad, and the ugly\n")
-	time.Sleep(1 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	fmt.Println("To recap, the players have the following hands:")
 	for _, p := range players {
 		fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
 	}
-	time.Sleep(5 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	// need a for loop to play through the remainder of the cards
 	// fmt.Println(len(cards)) //For comparison, remember, there should be 44 (52-8)")
@@ -561,4 +584,5 @@ func main() {
 }
 
 // env GOOS=windows GOARCH=386 go build -v github.com/gophercises/smokeOrFire
+// env GOOS=darwin GOARCH=amd64 go build -v github.com/gophercises/smokeOrFire
 //$ gomobile build -target=ios -bundleid=smokeOrFire github.com/gophercises/smokeOrFire
