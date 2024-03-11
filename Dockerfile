@@ -11,7 +11,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o /smoke-or-fire
+# RUN go build -o /smoke-or-fire
+
+# For Gitlab we need the following:
+RUN CGO_ENABLED=0 GOOS=linux go build -o /smoke-or-fire
 
 # EXPOSE 8080
 
