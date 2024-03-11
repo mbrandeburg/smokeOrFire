@@ -1,0 +1,19 @@
+FROM golang:1.22.1
+
+WORKDIR /app
+
+# COPY go.mod ./
+# RUN go mod download
+
+# COPY *.go ./
+
+COPY . .
+
+RUN go build -o /smoke-or-fire
+
+# EXPOSE 8080
+
+CMD [ "/smoke-or-fire" ]
+
+# docker build -t smoke-or-fire .
+# docker run smoke-or-fire
