@@ -1,3 +1,5 @@
+# TODO: current app goes into crash loop -- no user input handling -- however, webassembly changes will likely adjust this
+
 FROM golang:1.22.1
 
 WORKDIR /app
