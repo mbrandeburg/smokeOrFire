@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gophercises/smokeOrFire/localdeps/deck"
+	"github.com/gophercises/smokeOrFire/deck"
 )
 
 type Player struct {
