@@ -7,11 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"encoding/json"
-	"net/http"
-
-	// "strconv"
-
 	"github.com/gophercises/smokeOrFire/deck"
 )
 
@@ -42,113 +37,11 @@ func max(a, b int) int {
 func textGenerator(textFileName string, timerDuration int64) {
 	for _, line := range strings.Split(strings.TrimSuffix(textFileName, "\n"), "\n") {
 		fmt.Println(line)
-		time.Sleep(time.Duration(timerDuration) * time.Millisecond)
+		time.Sleep(110 * time.Millisecond)
 	}
-}
-
-// Define global game state - Note: This is a simplified approach for demonstration.
-var gameState struct {
-	Players       []Player
-	Deck          []deck.Card
-	CurrentPlayer int
 }
 
 func main() {
-	http.HandleFunc("/", serveFrontend)
-	http.HandleFunc("/start", startGame)
-	http.HandleFunc("/draw", drawCard)
-	// Add other endpoints as needed
-
-	fmt.Println("Server started at http://localhost:7777")
-	http.ListenAndServe(":7777", nil)
-}
-
-func serveFrontend(w http.ResponseWriter, r *http.Request) {
-	// Serve your HTML file
-	http.ServeFile(w, r, "index.html")
-}
-
-func startGame(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	// Assuming you send playerCount and deckCount in the request body as JSON
-	var requestData struct {
-		PlayerCount int `json:"playerCount"`
-		DeckCount   int `json:"deckCount"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// Initialize your game state here based on requestData
-	players := make([]Player, requestData.PlayerCount)
-	for i := range players {
-		players[i] = Player{Number: i + 1}
-	}
-
-	// Initialize the deck(s)
-	deck := deck.New(deck.Deck(requestData.DeckCount), deck.Shuffle)
-
-	// Corrected assignment to gameState
-	gameState.Players = players
-	gameState.Deck = deck       // Use 'Deck' instead of 'Cards'
-	gameState.CurrentPlayer = 0 // Start with the first player
-
-	// Respond to the client to indicate successful start
-	w.Header().Set("Content-Type", "application/json")
-	response := map[string]interface{}{
-		"message":     "Game started",
-		"playerCount": requestData.PlayerCount,
-		"deckCount":   requestData.DeckCount,
-	}
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, "Error encoding response", http.StatusInternalServerError)
-	}
-}
-
-func drawCard(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	if len(gameState.Deck) == 0 {
-		http.Error(w, "No more cards in the deck", http.StatusBadRequest)
-		return
-	}
-
-	// Draw a card from the deck
-	card, remainingDeck := draw(gameState.Deck)
-	gameState.Deck = remainingDeck
-
-	// Example of updating the current player's hand
-	// This assumes that gameState.CurrentPlayer is correctly managed elsewhere in your code
-	gameState.Players[gameState.CurrentPlayer].Hand = append(gameState.Players[gameState.CurrentPlayer].Hand, card)
-
-	// Prepare the card information for JSON response
-	cardInfo := map[string]interface{}{
-		"Suit": card.Suit,
-		"Rank": card.Rank,
-	}
-
-	// Send back the drawn card info and remaining cards count
-	response := map[string]interface{}{
-		"card":           cardInfo,
-		"remainingCards": len(gameState.Deck),
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, "Error encoding response", http.StatusInternalServerError)
-	}
-}
-
-func oldmain() {
-
 	introName :=
 		`
      /$$$$$$  /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$$
@@ -413,7 +306,8 @@ func oldmain() {
 	// fmt.Println(len(cards)) //For comparison, remember, there should be 44 (52-8)")
 	newLen := len(cards) % 3
 	if newLen == 1 { // and if we play the games in these, then we dont have to worry about calling them back later
-		fmt.Println("\nThere will be one bonus ugly card!\n")
+		fmt.Println("\nThere will be one bonus ugly card!")
+		fmt.Println("\n ")
 		ugly1 := cards[len(cards)-1]
 		cards = cards[:len(cards)-1]
 
@@ -421,7 +315,8 @@ func oldmain() {
 		var badStack []deck.Card
 		var uglyStack []deck.Card
 
-		fmt.Printf("Ready to deal the first card? (Hit enter)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Printf("Ready to deal the first card? (Hit enter)") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Println("\n ")
 		fmt.Scanf("%s\n", &input)
 		deckLength := len(cards)
 		for i := 1; i <= deckLength; i++ {
@@ -494,7 +389,8 @@ func oldmain() {
 			}
 		}
 
-		fmt.Println("\nLastly, now for the bonus ugly card!\n")
+		fmt.Println("\nLastly, now for the bonus ugly card!")
+		fmt.Println("\n ")
 		time.Sleep(1 * time.Second)
 		// fmt.Println(ugly1)
 		fmt.Printf("...%s!\n", ugly1)
@@ -509,7 +405,8 @@ func oldmain() {
 		// End of player scan function
 
 	} else if newLen == 2 {
-		fmt.Println("\nThere will be two bonus ugly cards!\n")
+		fmt.Println("\nThere will be two bonus ugly cards!")
+		fmt.Println("\n ")
 
 		ugly1 := cards[len(cards)-1]
 		cards = cards[:len(cards)-1]
@@ -523,7 +420,8 @@ func oldmain() {
 		var badStack []deck.Card
 		var uglyStack []deck.Card
 
-		fmt.Printf("Ready to deal the first card? (Hit enter)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Printf("Ready to deal the first card? (Hit enter)") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Println("\n ")
 		fmt.Scanf("%s\n", &input)
 		deckLength := len(cards)
 		for i := 1; i <= deckLength; i++ {
@@ -536,7 +434,8 @@ func oldmain() {
 					fmt.Printf("\nPlayer%d: %s, %s, %s, %s\n", p.Number, p.Hand[0], p.Hand[1], p.Hand[2], p.Hand[3])
 				}
 				fmt.Println("\nGOOD!")
-				fmt.Printf("...%s!\n", card)
+				fmt.Printf("...%s!", card)
+				fmt.Println("\n ")
 
 				for _, p := range players {
 					for z := 0; z < 4; z++ {
@@ -546,7 +445,8 @@ func oldmain() {
 					}
 				}
 
-				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+				fmt.Printf("\nReady to for the next round? (Hit enter)")
+				fmt.Println("\n ")
 				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 			} else if i%3 == 2 {
@@ -568,7 +468,8 @@ func oldmain() {
 					}
 				}
 
-				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+				fmt.Printf("\nReady to for the next round? (Hit enter)")
+				fmt.Println("\n ")
 				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 			} else if i%3 == 0 {
@@ -590,7 +491,8 @@ func oldmain() {
 					}
 				}
 
-				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+				fmt.Printf("\nReady to for the next round? (Hit enter)")
+				fmt.Println("\n ")
 				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 			}
@@ -598,7 +500,8 @@ func oldmain() {
 		// fmt.Printf("To test, the number of cards we didn't deal out, minus bonus uglies, are: %d", len(cards))
 		// ********************* End of coding main gameplay *************************************************
 
-		fmt.Println("\nLastly, now for the last two bonus ugly cards!\n")
+		fmt.Println("\nLastly, now for the last two bonus ugly cards!")
+		fmt.Println("\n ")
 		time.Sleep(1 * time.Second)
 		// fmt.Println(int(ugly1.Rank))
 		// fmt.Println(int(ugly2.Rank))
@@ -613,13 +516,15 @@ func oldmain() {
 			}
 		}
 	} else {
-		fmt.Println("\nThere won't be any bonus ugly cards!\n")
+		fmt.Println("\nThere won't be any bonus ugly cards!")
+		fmt.Println("\n ")
 
 		var goodStack []deck.Card
 		var badStack []deck.Card
 		var uglyStack []deck.Card
 
-		fmt.Printf("Ready to deal the first card? (Hit enter)\n") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Printf("Ready to deal the first card? (Hit enter)") //I think this can be a poor man's break as we do all the next rounds
+		fmt.Println("\n ")
 		fmt.Scanf("%s\n", &input)
 		deckLength := len(cards)
 		for i := 1; i <= deckLength; i++ {
@@ -642,7 +547,8 @@ func oldmain() {
 					}
 				}
 
-				fmt.Printf("\nReady to for the next round? (Hit enter)\n")
+				fmt.Printf("\nReady to for the next round? (Hit enter)")
+				fmt.Println("\n ")
 				fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 
 			} else if i%3 == 2 {
@@ -693,7 +599,8 @@ func oldmain() {
 		}
 
 	}
-	fmt.Printf("\nThanks for playing! (Hit enter to quit)\n")
+	fmt.Printf("\nThanks for playing! (Hit enter to quit)")
+	fmt.Println("\n ")
 	fmt.Scanf("%s\n", &input) // again, doesn't do anything, but gives us time before moving on
 }
 

@@ -7,6 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"encoding/json"
+	"net/http"
+
+	// "strconv"
+
 	"github.com/gophercises/smokeOrFire/deck"
 )
 
@@ -37,11 +42,139 @@ func max(a, b int) int {
 func textGenerator(textFileName string, timerDuration int64) {
 	for _, line := range strings.Split(strings.TrimSuffix(textFileName, "\n"), "\n") {
 		fmt.Println(line)
-		time.Sleep(110 * time.Millisecond)
+		time.Sleep(time.Duration(timerDuration) * time.Millisecond)
 	}
 }
 
+// Define global game state - Note: This is a simplified approach for demonstration.
+var gameState struct {
+	Players       []Player
+	Deck          []deck.Card
+	CurrentPlayer int
+}
+
 func main() {
+	http.HandleFunc("/", serveFrontend)
+	http.HandleFunc("/start", startGame)
+	http.HandleFunc("/draw", drawCard)
+	// http.HandleFunc("/next", nextPlayer)
+	http.HandleFunc("/makeChoice", makeChoice)
+
+	// Add other endpoints as needed
+
+	fmt.Println("Server started at http://localhost:7777")
+	http.ListenAndServe(":7777", nil)
+}
+
+func serveFrontend(w http.ResponseWriter, r *http.Request) {
+	// Serve your HTML file
+	http.ServeFile(w, r, "index.html")
+}
+
+func startGame(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Assuming you send playerCount and deckCount in the request body as JSON
+	var requestData struct {
+		PlayerCount int `json:"playerCount"`
+		DeckCount   int `json:"deckCount"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Initialize your game state here based on requestData
+	players := make([]Player, requestData.PlayerCount)
+	for i := range players {
+		players[i] = Player{Number: i + 1}
+	}
+
+	// Initialize the deck(s)
+	deck := deck.New(deck.Deck(requestData.DeckCount), deck.Shuffle)
+
+	// Corrected assignment to gameState
+	gameState.Players = players
+	gameState.Deck = deck       // Use 'Deck' instead of 'Cards'
+	gameState.CurrentPlayer = 0 // Start with the first player
+
+	// Respond to the client to indicate successful start
+	w.Header().Set("Content-Type", "application/json")
+	response := map[string]interface{}{
+		"message":     "Game started",
+		"playerCount": requestData.PlayerCount,
+		"deckCount":   requestData.DeckCount,
+	}
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+	}
+}
+
+func makeChoice(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var choice struct {
+		PlayerNumber int    `json:"playerNumber"`
+		Choice       string `json:"choice"` // "Smoke" or "Fire"
+	}
+	if err := json.NewDecoder(r.Body).Decode(&choice); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Here, you would implement your game's logic based on the choice
+	// This is a placeholder to show the pattern.
+	fmt.Printf("Player %d chose %s\n", choice.PlayerNumber, choice.Choice)
+
+	// Respond with success or relevant game state information
+	json.NewEncoder(w).Encode(map[string]string{"status": "choice received"})
+}
+
+func drawCard(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if len(gameState.Deck) == 0 {
+		http.Error(w, "No more cards in the deck", http.StatusBadRequest)
+		return
+	}
+
+	// Draw a card from the deck
+	card, remainingDeck := draw(gameState.Deck)
+	gameState.Deck = remainingDeck
+
+	// Example of updating the current player's hand
+	// This assumes that gameState.CurrentPlayer is correctly managed elsewhere in your code
+	gameState.Players[gameState.CurrentPlayer].Hand = append(gameState.Players[gameState.CurrentPlayer].Hand, card)
+
+	// Prepare the card information for JSON response
+	cardInfo := map[string]interface{}{
+		"Suit": card.Suit,
+		"Rank": card.Rank,
+	}
+
+	// Send back the drawn card info and remaining cards count
+	response := map[string]interface{}{
+		"card":           cardInfo,
+		"remainingCards": len(gameState.Deck),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+	}
+}
+
+func oldmain() {
+
 	introName :=
 		`
      /$$$$$$  /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$$
