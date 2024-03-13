@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player Count</title>
+    <style>
+        /* Simple styles for feedback and the form */
+        .hidden { display: none; }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h2>First, how many players are there? (2-20)</h2>
+    <form id="playerForm">
+        <label for="playerCount">Number of players: <span id="playerCountLabel">2</span></label>
+        <input type="range" id="playerCount" name="playerCount" min="2" max="20" value="2" required oninput="document.getElementById('playerCountLabel').textContent = this.value;">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response" class="hidden">
+        <div class="loading-spinner"></div>
+        <span id="responseMessage"></span>
+    </div>
+
+    <script>
+        document.getElementById("playerForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const playerCount = parseInt(form.playerCount.value);
+
+            if (isNaN(playerCount) || playerCount < 2 || playerCount > 20) {
+                alert("Please enter a number between 2 and 20.");
+                return;
+            }
+
+            const playerCountObject = { playerCount };
+            const responseContainer = document.getElementById("response");
+            const responseMessage = document.getElementById("responseMessage");
+
+            responseContainer.classList.remove('hidden');
+            responseMessage.textContent = ''; // Clear previous message
+
+            try {
+                const response = await fetch("/start", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(playerCountObject),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                responseMessage.textContent = result.message;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                responseMessage.textContent = "A network error occurred. Please try again.";
+            }
+        };
+    </script>
+</body>
+</html>
