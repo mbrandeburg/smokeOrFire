@@ -1,0 +1,42 @@
+# Binaries
+*.exe
+smokeOrFire
+smokeOrFire.app/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+
+# Go specific
+vendor/
+
+# Build artifacts
+dist/
+build/
+
+# Development files
+*.dev
+*.local
+
+# Documentation that's not needed in container
+README.md
+LICENSE
+
+# Scripts (they're for local development)
+start.sh
+start.ps1
+start.bat
+main.go
