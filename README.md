@@ -169,7 +169,7 @@ See LICENSE file for details.
 
 - **Original Game**: Kyle Durham
 - **Original Code**: Matthew Brandeburg (January 2019)
-- **Web Refactor**: Matthew Brandeburg (2025)
+- **Web Refactor**: Matthew Brandeburg + Claude AI Agents (2025)
 
 ---
 
