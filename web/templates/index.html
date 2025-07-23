@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smoke or Fire - The Card Game</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-content">
+                <div class="welcome-intro">
+                    <h2>WELCOME TO</h2>
+                </div>
+                
+                <div class="ascii-art" id="ascii-art">
+                    <pre class="ascii-smoke">
+     /$$$$$$  /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$$
+    /$$__  $$| $$$    /$$$ /$$__  $$| $$  /$$/| $$_____/
+   | $$  \__/| $$$$  /$$$$| $$  \ $$| $$ /$$/ | $$      
+   |  $$$$$$ | $$ $$/$$ $$| $$  | $$| $$$$$/  | $$$$$   
+    \____  $$| $$  $$$| $$| $$  | $$| $$  $$  | $$__/   
+    /$$  \ $$| $$\  $ | $$| $$  | $$| $$\  $$ | $$      
+   |  $$$$$$/| $$ \/  | $$|  $$$$$$/| $$ \  $$| $$$$$$$$
+    \______/ |__/     |__/ \______/ |__/  \__/|________/
+                    </pre>
+                    
+                    <pre class="ascii-or">
+     /$$$$$$  /$$$$$$$                                  
+    /$$__  $$| $$__  $$                                 
+   | $$  \ $$| $$  \ $$                                 
+   | $$  | $$| $$$$$$$/                                 
+   | $$  | $$| $$__  $$                                 
+   | $$  | $$| $$  \ $$                                 
+   |  $$$$$$/| $$  | $$                                 
+    \______/ |__/  |__/                                 
+                    </pre>
+                    
+                    <pre class="ascii-fire">
+    /$$$$$$$$ /$$$$$$ /$$$$$$$  /$$$$$$$$               
+   | $$_____/|_  $$_/| $$__  $$| $$_____/               
+   | $$        | $$  | $$  \ $$| $$                     
+   | $$$$$     | $$  | $$$$$$$/| $$$$$                  
+   | $$__/     | $$  | $$__  $$| $$__/                  
+   | $$        | $$  | $$  \ $$| $$                     
+   | $$       /$$$$$$| $$  | $$| $$$$$$$$               
+   |__/      |______/|__/  |__/|________/               
+                    </pre>
+                </div>
+                
+                <div class="title-animation">
+                    <p class="subtitle">The card game introduced by Kyle Durham</p>
+                    <p class="credits">Coded into digital form by Matthew Brandeburg • January 2019</p>
+                    <p class="credits">Web Version (Made with Claude Agents) • July 2025</p>
+                </div>
+                
+                <div class="game-setup">
+                    <h2>Game Setup</h2>
+                    
+                    <div class="setup-form">
+                        <div class="form-group">
+                            <label for="player-count">Number of Players (2-20):</label>
+                            <input type="number" id="player-count" min="2" max="20" value="4">
+                        </div>
+
+                        <div id="player-names-section" class="form-group">
+                            <label>Player Names (optional):</label>
+                            <div id="player-names-inputs">
+                                <!-- Player name inputs will be dynamically added -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="deck-count">Number of Decks (1-20):</label>
+                            <input type="number" id="deck-count" min="1" max="20" value="1">
+                        </div>
+                        
+                        <button id="create-game-btn" class="btn btn-primary">Create Game</button>
+                    </div>
+                    
+                    <div class="join-game">
+                        <h3>Or Join Existing Game</h3>
+                        <div class="form-group">
+                            <label for="game-id">Game ID:</label>
+                            <input type="text" id="game-id" placeholder="Enter game ID">
+                        </div>
+                        <button id="join-game-btn" class="btn btn-secondary">Join Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <h2>Game ID: <span id="current-game-id"></span></h2>
+                <div class="game-info">
+                    <span>Phase: <span id="current-phase"></span></span>
+                    <span>Round: <span id="current-round"></span></span>
+                    <span>Cards Left: <span id="cards-left"></span></span>
+                </div>
+            </div>
+
+            <div class="players-section">
+                <h3>Players</h3>
+                <div id="players-list" class="players-grid"></div>
+            </div>
+
+            <div class="game-action">
+                <div id="current-player-section">
+                    <h3 id="current-player-name">Player 1's Turn</h3>
+                    <p id="game-instruction">Choose Smoke or Fire:</p>
+                    
+                    <div id="guess-buttons" class="guess-buttons">
+                        <!-- Buttons will be dynamically added based on game phase -->
+                    </div>
+                </div>
+
+                <div id="main-game-section" class="hidden">
+                    <h3>Main Game - Good, Bad, and Ugly</h3>
+                    <div class="stacks-info">
+                        <div class="stack">Good: <span id="good-count">0</span></div>
+                        <div class="stack">Bad: <span id="bad-count">0</span></div>
+                        <div class="stack">Ugly: <span id="ugly-count">0</span></div>
+                    </div>
+                    <button id="draw-card-btn" class="btn btn-primary">Draw Card</button>
+                </div>
+            </div>
+
+            <div class="game-results">
+                <h3>Latest Results</h3>
+                <div id="results-list"></div>
+            </div>
+        </div>
+
+        <!-- Loading overlay -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
