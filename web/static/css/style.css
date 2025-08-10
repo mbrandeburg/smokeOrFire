@@ -513,3 +513,110 @@ body {
 .player-card.active {
     animation: pulse 2s infinite;
 }
+
+/* Main Game Result Popup */
+.main-game-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* Reduced opacity to see through */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    padding: 20px; /* Add padding so content doesn't touch edges */
+}
+
+.popup-content {
+    text-align: center;
+    color: white;
+    max-width: 500px; /* Reduced from 600px */
+    width: 90%; /* Responsive width */
+    max-height: 80vh; /* Limit height so players are visible */
+    padding: 30px; /* Reduced from 40px */
+    background: rgba(255, 255, 255, 0.15); /* Slightly more opaque for better readability */
+    border-radius: 20px;
+    backdrop-filter: blur(15px); /* Increased blur for better effect */
+    border: 2px solid rgba(255, 255, 255, 0.4); /* Slightly more visible border */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    overflow-y: auto; /* Allow scrolling if content is too tall */
+}
+
+.popup-header h2 {
+    font-size: 2.5rem; /* Reduced from 3rem */
+    margin-bottom: 15px; /* Reduced from 20px */
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+.popup-card {
+    font-size: 3rem; /* Reduced from 4rem */
+    font-weight: bold;
+    margin: 15px 0; /* Reduced from 20px 0 */
+    padding: 15px; /* Reduced from 20px */
+    background: white;
+    color: #333;
+    border-radius: 15px;
+    display: inline-block;
+    min-width: 100px; /* Reduced from 120px */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: cardFlip 0.8s ease-out;
+}
+
+.popup-matches {
+    margin: 20px 0; /* Reduced from 30px 0 */
+    font-size: 1.1rem; /* Slightly reduced from 1.2rem */
+}
+
+.popup-match-item {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border-left: 5px solid #feca57;
+}
+
+.popup-match-item.give {
+    border-left-color: #2ecc71;
+}
+
+.popup-match-item.drink {
+    border-left-color: #e74c3c;
+}
+
+@keyframes cardFlip {
+    0% {
+        transform: rotateY(180deg) scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: rotateY(90deg) scale(0.8);
+        opacity: 0.5;
+    }
+    100% {
+        transform: rotateY(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Player lighting effects for main game */
+.player-card.match-good {
+    border-color: #2ecc71 !important;
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.8) !important;
+    background: rgba(46, 204, 113, 0.2) !important;
+}
+
+.player-card.match-bad {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 30px rgba(231, 76, 60, 0.8) !important;
+    background: rgba(231, 76, 60, 0.2) !important;
+}
+
+.player-card.match-ugly {
+    border-color: #2c3e50 !important;
+    box-shadow: 0 0 30px rgba(44, 62, 80, 0.8) !important;
+    background: rgba(44, 62, 80, 0.3) !important;
+}

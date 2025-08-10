@@ -20,6 +20,9 @@ class SmokeOrFireApp {
         // Main game
         document.getElementById('draw-card-btn').addEventListener('click', () => this.drawMainGameCard());
         
+        // Popup close button
+        document.getElementById('popup-close-btn').addEventListener('click', () => this.closeMainGamePopup());
+        
         // Enter key handlers
         document.getElementById('game-id').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.joinGame();
@@ -241,15 +244,20 @@ class SmokeOrFireApp {
 
         this.gameState.players.forEach((player, index) => {
             const playerDiv = document.createElement('div');
-            playerDiv.className = `player-card ${index === this.gameState.currentPlayer ? 'active' : ''}`;
+            // Only show active highlight during the 4 question phases, not in main game
+            const isActiveInQuestions = this.gameState.phase !== 'MainGame' && index === this.gameState.currentPlayer;
+            playerDiv.className = `player-card ${isActiveInQuestions ? 'active' : ''}`;
             
             const handHTML = player.hand.map(card => {
                 const isRed = card.suit === 1 || card.suit === 3; // Diamond or Heart
                 return `<span class="card ${isRed ? 'red' : 'black'}">${this.formatCard(card)}</span>`;
             }).join('');
 
+            // Use player name if provided, otherwise fall back to Player X
+            const playerName = player.name && player.name.trim() ? player.name : `Player ${index + 1}`;
+
             playerDiv.innerHTML = `
-                <div class="player-name">${player.name}</div>
+                <div class="player-name">${playerName}</div>
                 <div class="player-hand">${handHTML}</div>
             `;
             
@@ -378,9 +386,13 @@ class SmokeOrFireApp {
         if (result.drinkSeconds > 0) {
             drinkText = ` - Drink for ${result.drinkSeconds} second${result.drinkSeconds > 1 ? 's' : ''}!`;
         }
+
+        // Use player name if available
+        const player = this.gameState.players[result.playerId - 1];
+        const playerName = player && player.name && player.name.trim() ? player.name : `Player ${result.playerId}`;
         
         resultDiv.innerHTML = `
-            <strong>Player ${result.playerId}</strong> drew ${this.formatCard(result.card)} 
+            <strong>${playerName}</strong> drew ${this.formatCard(result.card)} 
             and guessed ${result.guess}. ${result.isCorrect ? 'Correct!' : 'Wrong!'}${drinkText}
         `;
         
@@ -397,6 +409,10 @@ class SmokeOrFireApp {
             return;
         }
 
+        // Show full-screen popup first
+        this.showMainGamePopup(result);
+
+        // Update the regular results list
         const resultsContainer = document.getElementById('results-list');
         
         const resultDiv = document.createElement('div');
@@ -405,8 +421,10 @@ class SmokeOrFireApp {
         let matchesText = '';
         if (result.matches && result.matches.length > 0) {
             const matchList = result.matches.map(match => {
+                const player = this.gameState.players[match.playerId - 1];
+                const playerName = player && player.name && player.name.trim() ? player.name : `Player ${match.playerId}`;
                 const action = match.drinkType === 'give' ? 'gives a drink' : `drinks for ${match.drinkSeconds} second${match.drinkSeconds > 1 ? 's' : ''}`;
-                return `Player ${match.playerId} ${action}`;
+                return `${playerName} ${action}`;
             }).join(', ');
             matchesText = ` - Matches: ${matchList}`;
         } else {
@@ -423,6 +441,77 @@ class SmokeOrFireApp {
         while (resultsContainer.children.length > 5) {
             resultsContainer.removeChild(resultsContainer.lastChild);
         }
+
+        // Light up players based on matches
+        this.lightUpPlayers(result);
+    }
+
+    showMainGamePopup(result) {
+        const popup = document.getElementById('main-game-result-popup');
+        const cardTypeElement = document.getElementById('popup-card-type');
+        const cardElement = document.getElementById('popup-card');
+        const matchesElement = document.getElementById('popup-matches');
+
+        // Set card type and styling
+        cardTypeElement.textContent = result.cardType;
+        cardElement.textContent = this.formatCard(result.card);
+        
+        // Color the card element
+        const isRed = result.card.suit === 1 || result.card.suit === 3;
+        cardElement.style.color = isRed ? '#e74c3c' : '#2c3e50';
+
+        // Show matches
+        matchesElement.innerHTML = '';
+        if (result.matches && result.matches.length > 0) {
+            result.matches.forEach(match => {
+                const player = this.gameState.players[match.playerId - 1];
+                const playerName = player && player.name && player.name.trim() ? player.name : `Player ${match.playerId}`;
+                const action = match.drinkType === 'give' ? 'gives a drink to someone!' : `drinks for ${match.drinkSeconds} second${match.drinkSeconds > 1 ? 's' : ''}!`;
+                
+                const matchDiv = document.createElement('div');
+                matchDiv.className = `popup-match-item ${match.drinkType}`;
+                matchDiv.innerHTML = `<strong>${playerName}</strong> ${action}`;
+                matchesElement.appendChild(matchDiv);
+            });
+        } else {
+            const noMatchDiv = document.createElement('div');
+            noMatchDiv.className = 'popup-match-item';
+            noMatchDiv.innerHTML = 'No matches - safe!';
+            matchesElement.appendChild(noMatchDiv);
+        }
+
+        popup.classList.remove('hidden');
+    }
+
+    closeMainGamePopup() {
+        const popup = document.getElementById('main-game-result-popup');
+        popup.classList.add('hidden');
+    }
+
+    lightUpPlayers(result) {
+        // Clear previous lighting effects
+        const playerCards = document.querySelectorAll('.player-card');
+        playerCards.forEach(card => {
+            card.classList.remove('match-good', 'match-bad', 'match-ugly');
+        });
+
+        // Apply lighting based on matches
+        if (result.matches && result.matches.length > 0) {
+            result.matches.forEach(match => {
+                const playerCard = playerCards[match.playerId - 1];
+                if (playerCard) {
+                    const cardType = result.cardType.toLowerCase();
+                    playerCard.classList.add(`match-${cardType}`);
+                }
+            });
+        }
+
+        // Auto-remove lighting effects after 3 seconds
+        setTimeout(() => {
+            playerCards.forEach(card => {
+                card.classList.remove('match-good', 'match-bad', 'match-ugly');
+            });
+        }, 3000);
     }
 
     formatCard(card) {
